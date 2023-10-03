@@ -93,12 +93,17 @@ export const drawZonesAndTriangles = (
       if (!zoneElementBounds[z]) {
         zoneElementBounds[z] = {};
       }
-      zoneElementBounds[z][i] = [
-        [lineStartX, zoneStartY],
-        [lineStartX + MARKER_TIP_START, markerHeight],
-        [lineStartX + MARKER_TIP_END, markerHeight],
-        [lineStartX + MARKER_WIDTH, zoneStartY],
-      ];
+			if (invert) {
+				zoneElementBounds[z][i] = [
+					[lineStartX, markerHeight],
+					[lineStartX + MARKER_WIDTH, zoneStartY],
+				];
+			} else {
+				zoneElementBounds[z][i] = [
+					[lineStartX, zoneStartY],
+					[lineStartX + MARKER_WIDTH, markerHeight],
+				];
+			}
 
       ctx.beginPath();
       ctx.moveTo(lineStartX, zoneStartY);
@@ -124,11 +129,10 @@ export const drawZonesAndTriangles = (
   return { zoneBounds, ...zoneElementBounds };
 };
 
-const isInSimpleBounds = (
+const isInBounds = (
   clickCoord: { x: number; y: number },
   testCoords: ElBounds
 ): boolean => {
-  console.log(clickCoord, testCoords);
   const { x: testX, y: testY } = clickCoord;
   const x1 = testCoords[0][0];
   const x2 = testCoords[1][0];
@@ -137,27 +141,12 @@ const isInSimpleBounds = (
 
   return testX >= x1 && testX <= x2 && testY >= y1 && testY <= y2;
 };
-const isInComplexBounds = (
-  clickCoord: { x: number; y: number },
-  testCoords: ElBounds
-): boolean => {
-  // console.log(clickCoord, testCoords);
-  /*
-			if(
-       ( ( Left1 + Width1 ) >= Left2 )
-    && ( Left1 <= ( Left2 + Width2 ) )
-    && ( ( Top1 + Height1 ) >= Top2 )
-    && ( Top1 <= ( Top2 + Height2 ) )
-)
-		*/
-  return false;
-};
 export const zoneClicked = (
   clickCoord: { x: number; y: number },
   testCoords: ZoneBounds
 ): number | null => {
   for (let i = 0; i < ZONE.length; i++) {
-    if (isInSimpleBounds(clickCoord, testCoords[i])) {
+    if (isInBounds(clickCoord, testCoords[i])) {
       return i;
     }
   }
@@ -166,11 +155,11 @@ export const zoneClicked = (
 export const elementClicked = (
   clickCoord: { x: number; y: number },
   testCoords: ElementBounds[number]
-): boolean => {
+): number | null => {
   for (let i = 0; i < C.ZONE_ELEMENT_COUNT; i++) {
-    if (isInComplexBounds(clickCoord, testCoords[i])) {
-      return true;
+    if (isInBounds(clickCoord, testCoords[i])) {
+      return i;
     }
   }
-  return false;
+  return null;
 };

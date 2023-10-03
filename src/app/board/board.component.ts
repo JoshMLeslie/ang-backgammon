@@ -54,10 +54,8 @@ export class BoardComponent implements AfterViewInit {
     ctx.strokeRect(2, 2, BOARD_WIDTH - 4, BOARD_HEIGHT - 4);
 
     const zonesAndTrianglesBounds = drawZonesAndTriangles(ctx);
-    console.log(zonesAndTrianglesBounds)
     this.board.addEventListener("click", ({offsetX, offsetY}) => {
       const inZone = zoneClicked({x: offsetX, y: offsetY}, zonesAndTrianglesBounds.zoneBounds);
-      console.log(inZone);
       if (inZone) {
         const elementClicked = isElementClicked({x: offsetX, y: offsetY}, zonesAndTrianglesBounds[inZone]);
       }
