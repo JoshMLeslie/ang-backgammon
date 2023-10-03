@@ -84,3 +84,20 @@ export const drawZonesAndTriangles = (ctx: CanvasRenderingContext2D): Background
   });
   return { zoneBounds, ...zoneElementBounds };
 };
+
+export const elementClicked = (
+  clickCoord: { x: number; y: number },
+  testCoords: { x: number; y: number }[]
+): boolean => {
+  for (let i = 0; i < testCoords.length; i++) {
+    /*
+			if(
+       ( ( Left1 + Width1 ) >= Left2 )
+    && ( Left1 <= ( Left2 + Width2 ) )
+    && ( ( Top1 + Height1 ) >= Top2 )
+    && ( Top1 <= ( Top2 + Height2 ) )
+)
+		*/
+  }
+  return false;
+};
