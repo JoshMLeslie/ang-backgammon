@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { BOARD_HEIGHT, BOARD_WIDTH, DIVIDE_WIDTH, GOAL_WIDTH } from './board.const';
-import { drawGoals, drawZonesAndTriangles } from './board.helper';
+import { drawGoals, drawZonesAndTriangles, elementClicked as isElementClicked, zoneClicked } from './board.helper';
 
 @Component({
   selector: 'app-board',
@@ -47,12 +47,20 @@ export class BoardComponent implements AfterViewInit {
     ctx.fillRect(BOARD_WIDTH / 2 - 2, 0, 4, BOARD_HEIGHT);
 
     drawGoals(ctx);
-    
+
     // draw board edge
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 4;
     ctx.strokeRect(2, 2, BOARD_WIDTH - 4, BOARD_HEIGHT - 4);
 
-    drawZonesAndTriangles(ctx);
+    const zonesAndTrianglesBounds = drawZonesAndTriangles(ctx);
+    console.log(zonesAndTrianglesBounds)
+    this.board.addEventListener("click", ({offsetX, offsetY}) => {
+      const inZone = zoneClicked({x: offsetX, y: offsetY}, zonesAndTrianglesBounds.zoneBounds);
+      console.log(inZone);
+      if (inZone) {
+        const elementClicked = isElementClicked({x: offsetX, y: offsetY}, zonesAndTrianglesBounds[inZone]);
+      }
+    })
   }
 }
