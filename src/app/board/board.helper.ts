@@ -40,6 +40,18 @@ interface BoardBoundaries extends ElementBounds {
   zoneBounds: ZoneBounds;
 }
 
+export const drawGoals = (ctx: CanvasRenderingContext2D) => {
+	// draw left goals
+	ctx.strokeStyle = 'black';
+	ctx.lineWidth = 4;
+	ctx.strokeRect(0, 0, C.GOAL_WIDTH, C.BOARD_HEIGHT);
+	// draw right goals
+	ctx.strokeStyle = 'black';
+	ctx.lineWidth = 4;
+	ctx.strokeRect(C.BOARD_WIDTH - C.GOAL_WIDTH, 0, C.GOAL_WIDTH, C.BOARD_HEIGHT);
+
+};
+
 export const drawZonesAndTriangles = (
   ctx: CanvasRenderingContext2D
 ): BoardBoundaries => {

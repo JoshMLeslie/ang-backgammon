@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { BOARD_HEIGHT, BOARD_WIDTH, DIVIDE_WIDTH, GOAL_WIDTH } from './board.const';
-import { drawZonesAndTriangles } from './board.helper';
+import { drawGoals, drawZonesAndTriangles } from './board.helper';
 
 @Component({
   selector: 'app-board',
@@ -45,15 +45,9 @@ export class BoardComponent implements AfterViewInit {
     );
     ctx.fillStyle = 'black';
     ctx.fillRect(BOARD_WIDTH / 2 - 2, 0, 4, BOARD_HEIGHT);
-    // draw left goals
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(0, 0, GOAL_WIDTH, BOARD_HEIGHT);
-    // draw right goals
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(BOARD_WIDTH - GOAL_WIDTH, 0, GOAL_WIDTH, BOARD_HEIGHT);
 
+    drawGoals(ctx);
+    
     // draw board edge
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 4;
