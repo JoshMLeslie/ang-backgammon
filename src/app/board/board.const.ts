@@ -1,4 +1,3 @@
-
 // in px unless otherwise noted / obvious
 export const BOARD_HEIGHT = 400;
 export const BOARD_WIDTH = 800;
@@ -13,3 +12,6 @@ export const ZONE_ELEMENT_COUNT = 6;
 
 export const MARKER_GAP = 8;
 export const MARKER_HEIGHT = 160;
+
+export const COLOR_A = "lightgray"
+export const COLOR_B = "black";

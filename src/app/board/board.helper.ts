@@ -4,7 +4,8 @@ import * as C from './board.const';
 const ZONE_WIDTH = (C.BOARD_WIDTH - C.DIVIDE_WIDTH) / 2 - C.GOAL_WIDTH;
 
 const MARKER_WIDTH =
-  (ZONE_WIDTH - (C.ZONE_ELEMENT_COUNT + 1) * C.MARKER_GAP) / C.ZONE_ELEMENT_COUNT;
+  (ZONE_WIDTH - (C.ZONE_ELEMENT_COUNT + 1) * C.MARKER_GAP) /
+  C.ZONE_ELEMENT_COUNT;
 const MARKER_TIP_WIDTH = MARKER_WIDTH / 5;
 const MARKER_TIP_START = MARKER_TIP_WIDTH * 2;
 const MARKER_TIP_END = MARKER_TIP_WIDTH + MARKER_TIP_START;
@@ -29,33 +30,49 @@ const ZONE_START: { [z: number]: { x: number; y: number } } = {
 };
 
 /* [[startX, startY, endX, endY], ...] */
-type ElementBounds = number[][];
-interface BackgroundBoundaries {
-  zoneBounds: ElementBounds;
-  [z: number]: ElementBounds;
+type ZoneBounds = number[][];
+interface ElementBounds {
+  [z: number]: {
+    [i: number]: ZoneBounds;
+  };
+}
+interface BoardBoundaries extends ElementBounds {
+  zoneBounds: ZoneBounds;
 }
 
-export const drawZonesAndTriangles = (ctx: CanvasRenderingContext2D): BackgroundBoundaries => {
+export const drawZonesAndTriangles = (
+  ctx: CanvasRenderingContext2D
+): BoardBoundaries => {
   if (!ctx) {
     throw Error('Fn called without canvas ctx');
   }
 
-  const zoneBounds: ElementBounds = [];
-  const zoneElementBounds: { [z: number]: ElementBounds } = {};
+  const zoneBounds: ZoneBounds = [];
+  const zoneElementBounds: ElementBounds = {};
 
   ZONE.forEach((z) => {
     const { x: zoneStartX, y: zoneStartY } = ZONE_START[z];
-		zoneBounds.push([zoneStartX, zoneStartY, zoneStartX + ZONE_WIDTH, zoneStartY + C.ZONE_HEIGHT,])
+    zoneBounds.push([
+      zoneStartX,
+      zoneStartY,
+      zoneStartX + ZONE_WIDTH,
+      zoneStartY + C.ZONE_HEIGHT,
+    ]);
 
     const invert = z > 2;
     const markerHeight = zoneStartY + (invert ? -1 : 1) * C.MARKER_HEIGHT;
 
     for (let i = 0; i < C.ZONE_ELEMENT_COUNT; i++) {
-      ctx.fillStyle = i % 2 ? 'black' : 'lightgray';
-			
+      ctx.fillStyle = (
+        invert ? [C.COLOR_A, C.COLOR_B] : [C.COLOR_B, C.COLOR_A]
+      )[i % 2]; // uhh..
+
       const lineStartX = zoneStartX + i * (MARKER_WIDTH + C.MARKER_GAP);
 
-      const shapeBounds = [
+      if (!zoneElementBounds[z]) {
+        zoneElementBounds[z] = {};
+      }
+      zoneElementBounds[z][i] = [
         [lineStartX, zoneStartY],
         [lineStartX + MARKER_TIP_START, markerHeight],
         [lineStartX + MARKER_TIP_END, markerHeight],
@@ -66,7 +83,7 @@ export const drawZonesAndTriangles = (ctx: CanvasRenderingContext2D): Background
       ctx.moveTo(lineStartX, zoneStartY);
       // leg 1
       ctx.lineTo(lineStartX + MARKER_TIP_START, markerHeight);
-      // cap
+      // tip
       ctx.arc(
         lineStartX + MARKER_WIDTH / 2,
         markerHeight,
@@ -75,13 +92,14 @@ export const drawZonesAndTriangles = (ctx: CanvasRenderingContext2D): Background
         0,
         !invert // the other way doesn't work right
       );
-      // tip
+      // cap
       ctx.lineTo(lineStartX + MARKER_TIP_END, markerHeight);
       // leg 2
       ctx.lineTo(lineStartX + MARKER_WIDTH, zoneStartY);
       ctx.fill();
     }
   });
+
   return { zoneBounds, ...zoneElementBounds };
 };
 
