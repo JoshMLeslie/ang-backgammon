@@ -2,12 +2,9 @@ import * as C from './board.const';
 
 // in px unless otherwise noted / obvious
 const ZONE_WIDTH = (C.BOARD_WIDTH - C.DIVIDE_WIDTH) / 2 - C.GOAL_WIDTH;
-const ZONE_HEIGHT = 168;
 
-const MARKER_GAP = 8;
-const MARKER_HEIGHT = 160;
 const MARKER_WIDTH =
-  (ZONE_WIDTH - (C.ZONE_ELEMENT_COUNT + 1) * MARKER_GAP) / C.ZONE_ELEMENT_COUNT;
+  (ZONE_WIDTH - (C.ZONE_ELEMENT_COUNT + 1) * C.MARKER_GAP) / C.ZONE_ELEMENT_COUNT;
 const MARKER_TIP_WIDTH = MARKER_WIDTH / 5;
 const MARKER_TIP_START = MARKER_TIP_WIDTH * 2;
 const MARKER_TIP_END = MARKER_TIP_WIDTH + MARKER_TIP_START;
@@ -16,17 +13,17 @@ const MARKER_TIP_END = MARKER_TIP_WIDTH + MARKER_TIP_START;
 // 3 4
 const ZONE = [1, 2, 3, 4];
 const ZONE_START: { [z: number]: { x: number; y: number } } = {
-  1: { x: C.GOAL_WIDTH + MARKER_GAP, y: C.BOARD_BORDER_STROKE },
+  1: { x: C.GOAL_WIDTH + C.MARKER_GAP, y: C.BOARD_BORDER_STROKE },
   2: {
-    x: C.DIVIDE_WIDTH / 2 + MARKER_GAP + C.BOARD_WIDTH / 2,
+    x: C.DIVIDE_WIDTH / 2 + C.MARKER_GAP + C.BOARD_WIDTH / 2,
     y: C.BOARD_BORDER_STROKE,
   },
   3: {
-    x: C.GOAL_WIDTH + MARKER_GAP,
+    x: C.GOAL_WIDTH + C.MARKER_GAP,
     y: C.BOARD_HEIGHT - C.BOARD_BORDER_STROKE,
   },
   4: {
-    x: C.DIVIDE_WIDTH / 2 + MARKER_GAP + C.BOARD_WIDTH / 2,
+    x: C.DIVIDE_WIDTH / 2 + C.MARKER_GAP + C.BOARD_WIDTH / 2,
     y: C.BOARD_HEIGHT - C.BOARD_BORDER_STROKE,
   },
 };
@@ -48,15 +45,15 @@ export const drawZonesAndTriangles = (ctx: CanvasRenderingContext2D): Background
 
   ZONE.forEach((z) => {
     const { x: zoneStartX, y: zoneStartY } = ZONE_START[z];
-		zoneBounds.push([zoneStartX, zoneStartY, zoneStartX + ZONE_WIDTH, zoneStartY + ZONE_HEIGHT,])
+		zoneBounds.push([zoneStartX, zoneStartY, zoneStartX + ZONE_WIDTH, zoneStartY + C.ZONE_HEIGHT,])
 
     const invert = z > 2;
-    const markerHeight = zoneStartY + (invert ? -1 : 1) * MARKER_HEIGHT;
+    const markerHeight = zoneStartY + (invert ? -1 : 1) * C.MARKER_HEIGHT;
 
     for (let i = 0; i < C.ZONE_ELEMENT_COUNT; i++) {
       ctx.fillStyle = i % 2 ? 'black' : 'lightgray';
 			
-      const lineStartX = zoneStartX + i * (MARKER_WIDTH + MARKER_GAP);
+      const lineStartX = zoneStartX + i * (MARKER_WIDTH + C.MARKER_GAP);
 
       const shapeBounds = [
         [lineStartX, zoneStartY],
