@@ -2,8 +2,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
-  DIVIDE_WIDTH,
-  GOAL_WIDTH,
+  DIVIDE_WIDTH
 } from './board.const';
 import {
   drawGoals,
