@@ -1,0 +1,12 @@
+<div id="chit-container">
+	<ng-container *ngFor="let chitZone of chits; index as z;">
+		<ng-container *ngFor="let chitColumn of chitZone | keyvalue; index as c;">
+			<div *ngFor="let chit of [].constructor(chitColumn.value.count); index as i;"
+				[ngClass]="['chit', chitColumn.value.player]"
+				[id]="z+'-'+c+'-'+i"
+				(click)="chitClick($event, z+'-'+c+'-'+i)">
+			</div>
+			<!-- replace div w/ something like <app-chit-column [column]="chitColumn.value" ... />... -->
+		</ng-container>
+	</ng-container>
+</div>

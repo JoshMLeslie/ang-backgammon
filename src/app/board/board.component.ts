@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
@@ -16,7 +16,7 @@ import {
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
-export class BoardComponent implements AfterViewInit {
+export class BoardComponent implements OnInit {
   @ViewChild('board', { static: true })
   set board(el: ElementRef<HTMLCanvasElement>) {
     this._board = el?.nativeElement;
@@ -26,7 +26,9 @@ export class BoardComponent implements AfterViewInit {
   }
   private _board!: HTMLCanvasElement;
 
-  ngAfterViewInit() {
+  ctx?: CanvasRenderingContext2D;
+
+  ngOnInit() {
     const ctx = this.board?.getContext('2d', {
       alpha: false,
       willReadFrequently: false,
@@ -36,6 +38,8 @@ export class BoardComponent implements AfterViewInit {
       console.error("Couldn't grab canvas context");
       return;
     }
+
+    this.ctx = ctx;
 
     this.board.height = BOARD_HEIGHT;
     this.board.width = BOARD_WIDTH;
