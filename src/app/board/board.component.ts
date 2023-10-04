@@ -45,7 +45,7 @@ export class BoardComponent implements AfterViewInit {
     ctx.fillStyle = 'rgb(210, 180, 140)'; // tan
     ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
     // draw center divide
-    ctx.fillStyle = 'gray';
+    ctx.fillStyle = 'darkgray';
     ctx.fillRect(
       BOARD_WIDTH / 2 - DIVIDE_WIDTH / 2,
       0,
