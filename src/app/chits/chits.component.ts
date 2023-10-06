@@ -25,17 +25,16 @@ export class ChitsComponent implements OnInit {
     combineLatest([this.movement.tracker$, this.turn.active$])
       .pipe(map(([coords, active]) => ({ coords, active })))
       .subscribe(({ coords, active }) => {
-        console.log(coords, active)
+        console.log(coords, active);
         if (!coords.length || !active) {
           return;
         }
         const validMove = isValidMove(
-          coords,
           this.getChitCol(coords[1]),
           active as Player['color']
         );
         if (validMove) {
-          console.log("valid move")
+          console.log('valid move');
         }
       });
   }
