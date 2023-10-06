@@ -11,9 +11,9 @@ interface InitTrigger<T extends string = ''> {
   providedIn: 'root',
 })
 export class TurnService {
-  private readonly next$ = new Subject<void>();
-  private readonly init$ = new Subject<Player['color']>();
-  readonly active$ = merge(this.next$, this.init$).pipe(
+  private readonly nextPlayer$ = new Subject<void>();
+  private readonly initPlayer$ = new Subject<Player['color']>();
+  readonly activePlayer$ = merge(this.nextPlayer$, this.initPlayer$).pipe(
     startWith('white'),
     scan((acc, init) => {
       if (init) {
@@ -23,11 +23,19 @@ export class TurnService {
     }, 'white') // TODO reset to '' and add start sequence
   );
 
+  private readonly _roll$ = new Subject<void>();
+  readonly dice$ = this._roll$.pipe(
+    map(() => [
+      Math.round(Math.random() * 5) + 1,
+      Math.round(Math.random() * 5) + 1,
+    ])
+  );
+
   init(player: Player) {
-    this.init$.next(player.color);
+    this.initPlayer$.next(player.color);
   }
 
   next() {
-    this.next$.next();
+    this.nextPlayer$.next();
   }
 }

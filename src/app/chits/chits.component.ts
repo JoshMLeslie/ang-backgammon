@@ -22,16 +22,22 @@ export class ChitsComponent implements OnInit {
   }
 
   constructor(private turn: TurnService, private movement: MovementService) {
-    combineLatest([this.movement.tracker$, this.turn.active$])
-      .pipe(map(([coords, active]) => ({ coords, active })))
-      .subscribe(({ coords, active }) => {
-        console.log(coords, active);
-        if (!coords.length || !active) {
+    combineLatest([
+      this.movement.tracker$,
+      this.turn.activePlayer$,
+      this.turn.dice$,
+    ])
+      .pipe(map(([coords, active, dice]) => ({ active, coords, dice })))
+      .subscribe(({ active, coords, dice }) => {
+        if (!coords.init || !active) {
           return;
         }
+        // TODO / logic for a player being able to click on an origin lives elsewhere
         const validMove = isValidMove(
-          this.getChitCol(coords[1]),
-          active as Player['color']
+          this.getChitCol(coords.to),
+          active as Player['color'],
+          coords,
+          dice
         );
         if (validMove) {
           console.log('valid move');
