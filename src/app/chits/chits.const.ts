@@ -5,7 +5,7 @@ interface ChitColumn {
 }
 
 interface ChitZone {
-  [z: number]: ChitColumn;
+  [c: number]: ChitColumn;
 }
 
 export const CHIT_MAP_DEFAULT: ChitZone[] = [

@@ -1,3 +1,4 @@
+import { XYCoord } from '../interface/util';
 import * as C from './board.const';
 
 // in px unless otherwise noted / obvious
@@ -13,7 +14,7 @@ const MARKER_TIP_END = MARKER_TIP_WIDTH + MARKER_TIP_START;
 // 0 1
 // 2 3
 const ZONE = [0, 1, 2, 3];
-const ZONE_START: { x: number; y: number }[] = [
+const ZONE_START: XYCoord[] = [
   { x: C.GOAL_WIDTH + C.MARKER_GAP, y: C.BOARD_BORDER_STROKE },
   {
     x: C.DIVIDE_WIDTH / 2 + C.MARKER_GAP + C.BOARD_WIDTH / 2,
@@ -130,7 +131,7 @@ export const drawZonesAndTriangles = (
 };
 
 const isInBounds = (
-  clickCoord: { x: number; y: number },
+  clickCoord: XYCoord,
   testCoords: ElBounds
 ): boolean => {
   const { x: testX, y: testY } = clickCoord;
@@ -142,7 +143,7 @@ const isInBounds = (
   return testX >= x1 && testX <= x2 && testY >= y1 && testY <= y2;
 };
 export const zoneClicked = (
-  clickCoord: { x: number; y: number },
+  clickCoord: XYCoord,
   testCoords: ZoneBounds
 ): number | null => {
   for (let i = 0; i < ZONE.length; i++) {
@@ -153,7 +154,7 @@ export const zoneClicked = (
   return null;
 };
 export const elementClicked = (
-  clickCoord: { x: number; y: number },
+  clickCoord: XYCoord,
   testCoords: ElementBounds[number]
 ): number | null => {
   for (let i = 0; i < C.ZONE_ELEMENT_COUNT; i++) {

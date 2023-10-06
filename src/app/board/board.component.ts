@@ -1,13 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {
-  BOARD_HEIGHT,
-  BOARD_WIDTH,
-  DIVIDE_WIDTH
-} from './board.const';
+import { fromEvent, tap } from 'rxjs';
+import { MovementService } from '../service/movement.service';
+import { BOARD_HEIGHT, BOARD_WIDTH, DIVIDE_WIDTH } from './board.const';
 import {
   drawGoals,
   drawZonesAndTriangles,
-  elementClicked as isElementClicked,
+  elementClicked,
   zoneClicked,
 } from './board.helper';
 
@@ -27,6 +25,8 @@ export class BoardComponent implements OnInit {
   private _board!: HTMLCanvasElement;
 
   ctx?: CanvasRenderingContext2D;
+
+  constructor(private movement: MovementService) {}
 
   ngOnInit() {
     const ctx = this.board?.getContext('2d', {
@@ -61,26 +61,35 @@ export class BoardComponent implements OnInit {
 
     drawGoals(ctx);
 
-    const zonesAndTrianglesBounds = drawZonesAndTriangles(ctx);
-    this.board.addEventListener('click', ({ offsetX, offsetY }) => {
-      const inZone = zoneClicked(
-        { x: offsetX, y: offsetY },
-        zonesAndTrianglesBounds.zoneBounds
-      );
-      if (inZone !== null) {
-        const elementClicked = isElementClicked(
-          { x: offsetX, y: offsetY },
-          zonesAndTrianglesBounds[inZone]
-        );
-        if (elementClicked !== null) {
-          console.log("zone", inZone, "el", elementClicked)
-        }
-      }
-    });
+    this.subscribeZones(ctx);
 
     // draw board edge
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 4;
     ctx.strokeRect(2, 2, BOARD_WIDTH - 4, BOARD_HEIGHT - 4);
+  }
+
+  private subscribeZones(ctx: CanvasRenderingContext2D) {
+    const zonesAndTrianglesBounds = drawZonesAndTriangles(ctx);
+    fromEvent<MouseEvent>(this.board, 'click').pipe(
+      tap(({ offsetX, offsetY }) => {
+        const zone = zoneClicked(
+          { x: offsetX, y: offsetY },
+          zonesAndTrianglesBounds.zoneBounds
+        );
+        if (zone === null) {
+          return;
+        }
+        const element = elementClicked(
+          { x: offsetX, y: offsetY },
+          zonesAndTrianglesBounds[zone]
+        );
+        if (element === null) {
+          return;
+        }
+        this.movement.track({ element, zone });
+      })
+    ).subscribe();
+
   }
 }
