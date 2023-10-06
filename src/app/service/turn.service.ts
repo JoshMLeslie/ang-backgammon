@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, map, merge, scan, startWith } from 'rxjs';
+import { Subject, map, merge, scan, startWith } from 'rxjs';
 import { Player } from '../interface/player';
 
-interface InitTrigger<T extends string = ''> {
-  action: 'init' | T;
-  val: string;
+enum Tasks {
+  "roll",
+  "move"
 }
 
 @Injectable({
@@ -31,11 +31,25 @@ export class TurnService {
     ])
   );
 
+  readonly tasks$ = new Subject().pipe(startWith(Tasks));
+
   init(player: Player) {
     this.initPlayer$.next(player.color);
   }
 
   next() {
     this.nextPlayer$.next();
+  }
+
+  roll() {
+    this._roll$.next();
+  }
+
+  move(dist: number) {
+    // todo
+  }
+
+  doTask(task: Tasks) {
+    // todo
   }
 }
