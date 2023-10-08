@@ -14,13 +14,13 @@ export class TurnService {
   private readonly nextPlayer$ = new Subject<void>();
   private readonly initPlayer$ = new Subject<Player['color']>();
   readonly activePlayer$ = merge(this.nextPlayer$, this.initPlayer$).pipe(
-    startWith('white'),
+    startWith('white'),  // TODO reset to '' and add start sequence
     scan((acc, init) => {
       if (init) {
         return init;
       }
       return acc === 'white' ? 'black' : 'white';
-    }, 'white') // TODO reset to '' and add start sequence
+    }, '')
   );
 
   private readonly _roll$ = new Subject<void>();

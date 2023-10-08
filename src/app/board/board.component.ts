@@ -71,6 +71,7 @@ export class BoardComponent implements OnInit {
 
   private subscribeZones(ctx: CanvasRenderingContext2D) {
     const zonesAndTrianglesBounds = drawZonesAndTriangles(ctx);
+    // handle user clicking starting zone and ending zone for a turn
     fromEvent<MouseEvent>(this.board, 'click').pipe(
       tap(({ offsetX, offsetY }) => {
         const zone = zoneClicked(
@@ -87,6 +88,7 @@ export class BoardComponent implements OnInit {
         if (element === null) {
           return;
         }
+        // push board-valid movement to movement tracking srv
         this.movement.track({ element, zone });
       })
     ).subscribe();
