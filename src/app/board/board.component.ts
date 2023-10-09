@@ -89,7 +89,7 @@ export class BoardComponent implements OnInit {
           return;
         }
         // push board-valid movement to movement tracking srv
-        this.movement.track({ element, zone });
+        this.movement.track({ columnn: element, zone });
       })
     ).subscribe();
 

@@ -5,7 +5,7 @@ export interface XYCoord {
 
 export interface BoardCoord {
 	zone: number;
-	element: number;
+	columnn: number;
 }
 
 export interface BoardCoordMove {

@@ -8,8 +8,8 @@ import { BoardCoord, BoardCoordMove } from '../interface/util';
 export class MovementService {
   readonly tracker$ = new BehaviorSubject<BoardCoordMove>({
     init: false,
-    from: { element: 0, zone: 0 },
-    to: { element: 0, zone: 0 },
+    from: { columnn: 0, zone: 0 },
+    to: { columnn: 0, zone: 0 },
   });
   private _tracker$ = new Subject<null | BoardCoord>();
 
