@@ -1,34 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Subject, map, merge, scan, startWith } from 'rxjs';
-import { Player } from '../interface/player';
+import { Subject, combineLatest, map, merge, scan, startWith } from 'rxjs';
+import { Player, PlayerColor } from '../interface/player';
 
 enum Tasks {
-  "roll",
-  "move"
+  'roll',
+  'move',
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class TurnService {
-  private readonly nextPlayer$ = new Subject<void>();
-  private readonly initPlayer$ = new Subject<Player['color']>();
-  readonly activePlayer$ = merge(this.nextPlayer$, this.initPlayer$).pipe(
-    startWith('white'),  // TODO reset to '' and add start sequence
-    scan((acc, init) => {
+  private readonly initPlayer$ = new Subject<PlayerColor>();
+  private readonly nextPlayerTrigger$ = new Subject<void>();
+  readonly activePlayer$ = merge(
+    this.nextPlayerTrigger$,
+    this.initPlayer$
+  ).pipe(
+    scan((acc: PlayerColor, init: void | PlayerColor) => {
       if (init) {
         return init;
       }
-      return acc === 'white' ? 'black' : 'white';
-    }, '')
+      return acc === PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
+    }, PlayerColor.NULL)
   );
 
   private readonly _roll$ = new Subject<void>();
   readonly dice$ = this._roll$.pipe(
-    map(() => [
-      Math.round(Math.random() * 5) + 1,
-      Math.round(Math.random() * 5) + 1,
-    ])
+    map(() => {
+      const d = [
+        Math.round(Math.random() * 5) + 1,
+        Math.round(Math.random() * 5) + 1,
+      ];
+      // handle doubling dice on matching rolls
+      return d[0] === d[1] ? d.concat(d) : d;
+    })
   );
 
   readonly tasks$ = new Subject().pipe(startWith(Tasks));
@@ -38,7 +44,7 @@ export class TurnService {
   }
 
   next() {
-    this.nextPlayer$.next();
+    this.nextPlayerTrigger$.next();
   }
 
   roll() {
