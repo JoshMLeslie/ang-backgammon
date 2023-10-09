@@ -1,6 +1,8 @@
 // in px unless otherwise noted / obvious
 export const BOARD_HEIGHT = 400;
 export const BOARD_WIDTH = 800;
+
+// if updating, also change $board-border-stroke
 export const BOARD_BORDER_STROKE = 4;
 
 export const DIVIDE_WIDTH = 40;

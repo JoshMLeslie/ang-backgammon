@@ -1,3 +1,4 @@
+import { BoardBoundaries, ElBounds, ElementBounds, ZoneBounds } from '../interface/board';
 import { XYCoord } from '../interface/util';
 import * as C from './board.const';
 
@@ -30,28 +31,14 @@ const ZONE_START: XYCoord[] = [
   },
 ];
 
-// [[x1, y1], ... [xN, yN]]
-type ElBounds = [number, number][];
-interface ElementBounds {
-  [z: number]: {
-    [el: number]: ElBounds;
-  };
-}
-
-// [[[x1, y1], [x2, y2]], [[x1, y1], [x2, y2]]]
-type ZoneBounds = [number, number][][];
-interface BoardBoundaries extends ElementBounds {
-  zoneBounds: ZoneBounds;
-}
-
 export const drawGoals = (ctx: CanvasRenderingContext2D) => {
   // draw left goals
   ctx.strokeStyle = 'black';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = C.BOARD_BORDER_STROKE;
   ctx.strokeRect(0, 0, C.GOAL_WIDTH, C.BOARD_HEIGHT);
   // draw right goals
   ctx.strokeStyle = 'black';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = C.BOARD_BORDER_STROKE;
   ctx.strokeRect(C.BOARD_WIDTH - C.GOAL_WIDTH, 0, C.GOAL_WIDTH, C.BOARD_HEIGHT);
 };
 

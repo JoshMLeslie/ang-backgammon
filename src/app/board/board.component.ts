@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, tap } from 'rxjs';
+import { BoardBoundaries } from '../interface/board';
 import { MovementService } from '../service/movement.service';
-import { BOARD_HEIGHT, BOARD_WIDTH, DIVIDE_WIDTH } from './board.const';
+import { BOARD_BORDER_STROKE, BOARD_HEIGHT, BOARD_WIDTH, DIVIDE_WIDTH } from './board.const';
 import {
   drawGoals,
   drawZonesAndTriangles,
@@ -24,7 +25,7 @@ export class BoardComponent implements OnInit {
   }
   private _board!: HTMLCanvasElement;
 
-  ctx?: CanvasRenderingContext2D;
+  zones?: BoardBoundaries;
 
   constructor(private movement: MovementService) {}
 
@@ -38,8 +39,6 @@ export class BoardComponent implements OnInit {
       console.error("Couldn't grab canvas context");
       return;
     }
-
-    this.ctx = ctx;
 
     this.board.height = BOARD_HEIGHT;
     this.board.width = BOARD_WIDTH;
@@ -57,7 +56,7 @@ export class BoardComponent implements OnInit {
       BOARD_HEIGHT
     );
     ctx.fillStyle = 'black';
-    ctx.fillRect(BOARD_WIDTH / 2 - 2, 0, 4, BOARD_HEIGHT);
+    ctx.fillRect(BOARD_WIDTH / 2 - 2, 0, BOARD_BORDER_STROKE, BOARD_HEIGHT);
 
     drawGoals(ctx);
 
@@ -65,25 +64,25 @@ export class BoardComponent implements OnInit {
 
     // draw board edge
     ctx.strokeStyle = 'black';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(2, 2, BOARD_WIDTH - 4, BOARD_HEIGHT - 4);
+    ctx.lineWidth = BOARD_BORDER_STROKE;
+    ctx.strokeRect(2, 2, BOARD_WIDTH - BOARD_BORDER_STROKE, BOARD_HEIGHT - BOARD_BORDER_STROKE);
   }
 
   private subscribeZones(ctx: CanvasRenderingContext2D) {
-    const zonesAndTrianglesBounds = drawZonesAndTriangles(ctx);
+    this.zones = drawZonesAndTriangles(ctx);
     // handle user clicking starting zone and ending zone for a turn
     fromEvent<MouseEvent>(this.board, 'click').pipe(
       tap(({ offsetX, offsetY }) => {
         const zone = zoneClicked(
           { x: offsetX, y: offsetY },
-          zonesAndTrianglesBounds.zoneBounds
+          this.zones!.zoneBounds
         );
         if (zone === null) {
           return;
         }
         const element = elementClicked(
           { x: offsetX, y: offsetY },
-          zonesAndTrianglesBounds[zone]
+          this.zones![zone]
         );
         if (element === null) {
           return;
