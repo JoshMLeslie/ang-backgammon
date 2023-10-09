@@ -1,8 +1,8 @@
-import { Player } from "./player";
+import { PlayerColor } from "./player";
 
 export interface ChitColumn {
   count: number;
-  player: Player;
+  color: PlayerColor;
 }
 
 export interface ChitZone {
