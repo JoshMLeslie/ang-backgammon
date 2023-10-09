@@ -1,26 +1,46 @@
+@import "src/styles/vars";
+
 #chit-container {
 	position: absolute;
-	top: 4px;
-	right: 4px;
-	bottom: 4px;
-	left: 4px;
+	top: $board-border-stroke;
+	right: $board-border-stroke;
+	bottom: $board-border-stroke;
+	left: $board-border-stroke;
+}
+#chit-container {
 	pointer-events: none;
-
 	* {
-		pointer-events: all;
+		pointer-events: none;
 	}
 }
 
-.chit {
+#chit-container div.chit {
 	height: 3rem;
 	width: 3rem;
-	position: absolute;
+	position: relative;
 	border-radius: 50%;
+	border: 2px solid darkgray;
+	background-color: gray;
+	box-sizing: border-box;
+	pointer-events: all;
+}
+.chit:not(:first-of-type) {
+	margin-top: -1.5rem;
 }
 
 .chit.black {
-	background-color: black;
+	box-shadow: inset 0 0 8px 12px black;
 }
 .chit.white {
-	background-color: white;
+	box-shadow: inset 0 0 8px 12px white;
+}
+
+.chit-zone {
+	position: absolute;
+	height: 168px;
+	width: 320px;
+}
+
+.chit-column {
+	position: absolute;
 }

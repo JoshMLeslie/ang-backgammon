@@ -1,12 +1,11 @@
 <div id="chit-container">
-	<ng-container *ngFor="let chitZone of chits; index as z;">
-		<ng-container *ngFor="let chitColumn of chitZone | keyvalue; index as c;">
+	<div class="chit-zone" *ngFor="let chitZone of chits; index as z;" [ngStyle]="locateZone(z)">
+		<div class="chit-column" *ngFor="let chitColumn of chitZone | keyvalue; index as c;" [ngStyle]="locateCol({c, z})">
 			<div *ngFor="let chit of [].constructor(chitColumn.value.count); index as i;"
-				[ngClass]="['chit', chitColumn.value.player.color]"
-				[id]="z+'-'+c+'-'+i"
-				(click)="chitClick($event, z+'-'+c+'-'+i)">
+				[ngClass]="['chit', chitColumn.value.color]" [id]="'chit-'+z+'-'+c+'-'+i"
+				(click)="chitClick({color: chitColumn.value.color, z, c, i})">
 			</div>
 			<!-- replace div w/ something like <app-chit-column [column]="chitColumn.value" ... />... -->
-		</ng-container>
-	</ng-container>
+		</div>
+	</div>
 </div>
